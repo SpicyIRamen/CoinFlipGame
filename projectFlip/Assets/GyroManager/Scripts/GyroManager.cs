@@ -30,8 +30,14 @@ public class GyroManager : MonoBehaviour
     private Quaternion rotation;
     private bool gyroActive;
 
+    private void Start()
+    {
+        GyroManager.Instance.EnableGyro();
+    }
+
     public void EnableGyro()
     {
+        
         if (gyroActive)
             return;
 
