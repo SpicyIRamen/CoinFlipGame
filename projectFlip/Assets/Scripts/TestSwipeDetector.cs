@@ -23,9 +23,11 @@ public class TestSwipeDetector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+            
         foreach (Touch touch in Input.touches)
         {
+            print(touch.deltaPosition);
+           
             if (touch.phase == TouchPhase.Began)
             {
                 fingerUp = touch.position;
@@ -62,7 +64,7 @@ public class TestSwipeDetector : MonoBehaviour
                 OnSwipeUp();
 
                 // 4 next lines handles the angular momentum of the coin. 
-                Speed = r.velocity.magnitude;
+                Speed = r.velocity.magnitude*100;
                 AngularSpeed = r.velocity.magnitude;
                 r.maxAngularVelocity = float.MaxValue;
                 r.AddTorque(Vector3.forward);
@@ -83,7 +85,7 @@ public class TestSwipeDetector : MonoBehaviour
     //////////////////////////////////CALLBACK FUNCTIONS/////////////////////////////
     void OnSwipeUp()
     {
-        Debug.Log("Swipe UP");
+        // Debug.Log("Swipe UP");
     }
 }
 }
