@@ -52,7 +52,7 @@ public class TestSwipeDetector : MonoBehaviour
             }
         }
     }
-
+    
     void checkSwipe()
     {
         //Check if Vertical swipe
