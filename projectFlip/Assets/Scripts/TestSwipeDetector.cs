@@ -26,7 +26,7 @@ public class TestSwipeDetector : MonoBehaviour
             
         foreach (Touch touch in Input.touches)
         {
-            print(touch.deltaPosition);
+            //print(touch.deltaPosition);
            
             if (touch.phase == TouchPhase.Began)
             {

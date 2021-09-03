@@ -1,4 +1,0 @@
-#Fri Sep 03 09:21:25 CEST 2021
-base.0=D\:\\JS\\VAU\\projectflip\\projectFlip\\Temp\\gradleOut\\launcher\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
