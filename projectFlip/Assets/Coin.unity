@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -305,7 +305,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1440227964}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: -6, y: 13.06, z: 10.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -389,7 +389,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882705438}
   m_LocalRotation: {x: 0.30557176, y: -0, z: -0, w: 0.95216906}
-  m_LocalPosition: {x: 0.27, y: 10.37, z: -10.73}
+  m_LocalPosition: {x: 0.27, y: 14.45, z: -16.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -463,6 +463,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CustomCoin
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 643e5f1261d12b64492ae16931348cd8, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 643e5f1261d12b64492ae16931348cd8, type: 3}
 --- !u!1 &1963808047 stripped
@@ -498,7 +502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78ba070dab1addc4cb46c76d19d8809a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceVec: {x: 0, y: 20, z: 0}
+  forceVec: {x: 0, y: 50, z: 0}
   rb: {fileID: 0}
 --- !u!114 &1963808050
 MonoBehaviour:

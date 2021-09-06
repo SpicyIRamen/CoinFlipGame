@@ -46,15 +46,21 @@ public class GyroManager : MonoBehaviour
             gyro = Input.gyro;
             gyro.enabled = true;
             gyroActive = gyro.enabled;
-        }
-                
+        } 
     }
+
     private void Update()
     {
         if (gyroActive)
         {
             rotation = gyro.attitude;
             //Debug.Log(rotation);
+        }
+        if (GetComponent<Rigidbody>().position.y >= 50.0)
+        {
+            gyro = Input.gyro;
+            gyro.enabled = false;
+            gyroActive = gyro.enabled;
         }
     }
     public Quaternion GetGyroRotation()
