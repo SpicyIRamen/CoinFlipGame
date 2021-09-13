@@ -10,7 +10,6 @@ public class TouchManager : MonoBehaviour
 
     }
 
-    public Text tCount;
 
     GameObject gObj = null;
     Plane objPlane;
@@ -32,15 +31,16 @@ public class TouchManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        tCount.text = Input.touchCount.ToString();
 
-        if (Input.GetTouch(0).phase == TouchPhase.Began)
-        {
+        if (Input.touchCount > 0)
+        {       
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
             Ray mouseRay = GenerateMouseRay(Input.GetTouch(0).position);
             RaycastHit hit;
 
-            if (Physics.Raycast(mouseRay.origin, mouseRay.direction, out hit))
-            {
+                if (Physics.Raycast(mouseRay.origin, mouseRay.direction, out hit))
+                {
                 gObj = hit.transform.gameObject;
                 objPlane = new Plane(Camera.main.transform.forward * -1, gObj.transform.position);
 
@@ -48,18 +48,21 @@ public class TouchManager : MonoBehaviour
                 Ray mRay = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
                 float rayDistane;
                 objPlane.Raycast(mRay, out rayDistane);
+                }
             }
-        }
-        else if (Input.GetTouch(0).phase == TouchPhase.Moved && gObj)
-        {
+            else if (Input.GetTouch(0).phase == TouchPhase.Moved && gObj)
+            {
+
             Ray mRay = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             float rayDistance;
+            
             if (objPlane.Raycast(mRay, out rayDistance))
                 gObj.transform.position = mRay.GetPoint(rayDistance) + m0;
-        }
-        else if (Input.GetTouch(0).phase == TouchPhase.Ended && gObj)
-        {
+            }
+            else if (Input.GetTouch(0).phase == TouchPhase.Ended && gObj)
+            {
             gObj = null;
+            }
         }
 
     }
