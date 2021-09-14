@@ -77,7 +77,7 @@ public class GyroManagerInvisObjectTriggerCoin : MonoBehaviour
         if (GetComponent<Rigidbody>().position.y < 25 && GetComponent<Rigidbody>().position.y > 5 && !debugged)
         {
             Debug.Log("Swipe Harder");
-            debugged = true;
+            debugged = true;        
         }
     }
 
