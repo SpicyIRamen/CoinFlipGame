@@ -21,7 +21,7 @@ public class FlipperScript : MonoBehaviour
 
     private void SetFlipperToTouch(){
         var touchPos = Input.mousePosition;
-        touchPos.z = 25; //distance of 10 units from camera
+        touchPos.z = 15; //distance of 10 units from camera
 
         rb.position = Camera.main.ScreenToWorldPoint(touchPos);
     }
