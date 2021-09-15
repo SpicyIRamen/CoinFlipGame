@@ -21,7 +21,7 @@ public class CoinSide : MonoBehaviour
              Debug.Log("Its tails");
              
 
-        }else if (x > -80 && x < -100f)
+        }else if (x < -80 && x > -100f)
         {
              isHeads = true;
              Debug.Log("Its heads");
