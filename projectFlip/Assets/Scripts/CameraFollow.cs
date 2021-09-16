@@ -18,4 +18,9 @@ public class CameraFollow : MonoBehaviour
         cameraPosition = targetObject.position + initalOffset;
         transform.position = cameraPosition;
     }
+
+    void Update()
+    {
+        
+    }
 }
