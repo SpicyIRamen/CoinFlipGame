@@ -2,130 +2,81 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace DaburuTools
+public class GyroRotateAroundObject : MonoBehaviour
 {
-	namespace Input
-	{
-		public class GyroRotateAroundObject : MonoBehaviour
-		{
-			// Editor
-			public float mouseSensitivityX = 3.5f;
-			public float mouseSensitivityY = 3.5f;
-			public bool mbLockNHideCursor = false;
-			private float cameraRotationX, cameraRotationY;
+    private Gyroscope gyro;
+    private bool gyroSupported;
+    private Quaternion rotFix;
 
-			private enum SnapTo { WorldAxis, InitialRotation };
+    //[SerializeField]
+    //private Transform worldObj;
+    //private float startY;
 
-			// Editable Variables
-			[SerializeField] private Transform m_RotationPivot = null;
-			[SerializeField] private bool bIsPivotRotating = false;
+    [SerializeField]
+    private float _gyroSensitivity = 3.0f;
 
-			[SerializeField] private SnapTo enum_snapTo = SnapTo.InitialRotation;
+    private float _rotationY;
+    private float _rotationX;
+    private float _rotationZ;
 
-			// Un-Editable Variables
-			private Gyroscope m_Gyroscope;              // m_Gyroscope: A reference to the gyroscope
-			private Quaternion m_gyroscopeRotation;     // m_gyroscopeRotation: The proper axis-defined rotation of the gyroscope
-			private Quaternion m_unityWorldRotation;    // m_unityWorldRotation: The current rotation that goes along with the world-axis
+    [SerializeField]
+    private Transform _target;
 
-			private Vector3 m_vectorFromPivot;                      // m_vectorFromPivot: The distance between the this object and the pivot
-			private Quaternion m_initialRotationOnAwake;            // m_initialRotationOnAwake: The initial rotation of this object when this script is awake
-			private Quaternion m_inverseInitialRotationOnAwake;     // m_inverseInitialRotationOnAwake: The inverse of the initial rotation of this object
-			private Quaternion m_initialPivotRotationOnAwake;       // m_initialPivotRotationOnAwake: The initial rotation of the pivot when this script is awake
-			private float mf_snapToPointOffsetRotation = 0f;        // mf_snapToPointOffsetRotation: The 'center-to-screen' y-axis offset
+    [SerializeField]
+    private float _distanceFromTarget = 3.0f;
 
-			// Private Functions
-			// Awake(): is called at the start of the program
-			void Awake()
-			{
-				// Gyroscope Initialisation
-				m_Gyroscope = UnityEngine.Input.gyro;
-				m_Gyroscope.enabled = true;
+    private Vector3 _currentRotation;
+    private Vector3 _smoothVelocity = Vector3.zero;
 
-				// if: There is no rotation pivot assigned, the current gameObject will be assigned instead
-				if (m_RotationPivot == null)
-					m_RotationPivot = this.transform;
+    [SerializeField]
+    private float _smoothTime = 0.2f;
 
-				// Initialisation
-				m_vectorFromPivot = this.transform.position - m_RotationPivot.transform.position;
-				m_initialRotationOnAwake = transform.rotation;
-				m_initialPivotRotationOnAwake = m_RotationPivot.rotation;
-				m_inverseInitialRotationOnAwake = Quaternion.Inverse(m_initialRotationOnAwake);
-				UpdateGyroscopeRotation();
+    [SerializeField]
+    private Vector3 _rotationXMinMax = new Vector2(-40, 40);
 
-				// This line fixed the x-axis problem
-				transform.Rotate(Vector3.right, -m_initialRotationOnAwake.eulerAngles.x * 2f);
+    void Start()
+    {
+        gyroSupported = SystemInfo.supportsGyroscope;
 
-				// Editor
-				cameraRotationX = transform.localEulerAngles.x;
-				cameraRotationY = transform.localEulerAngles.y;
-				if (mbLockNHideCursor)
-				{
-					Cursor.lockState = CursorLockMode.Locked;
-					Cursor.visible = false;
-				}
-			}
+        //GameObject camParent = new GameObject("CustomCoin2");
+        //camParent.transform.position = transform.position;
+        //transform.parent = camParent.transform;
 
-			// Update(): is called every frame
-			void Update()
-			{
-				UpdateGyroscopeRotation();
+        if (gyroSupported)
+        {
+            gyro = Input.gyro;
+            gyro.enabled = true;
 
-				// Editor - Mouse Emulation
-#if UNITY_EDITOR
-				cameraRotationX += UnityEngine.Input.GetAxis("Mouse Y") * mouseSensitivityY;
-				cameraRotationY += UnityEngine.Input.GetAxis("Mouse X") * mouseSensitivityX;
+            //camParent.transform.rotation = Quaternion.Euler(90f, 180f, 0f);
+            //rotFix = new Quaternion(0, 0, 1, 0);
+        }
+    }
 
-				m_gyroscopeRotation = Quaternion.Euler(-cameraRotationX, cameraRotationY, 0.0f);
-#endif
-				// Converts gyroscope rotation to unity world rotation
-				m_unityWorldRotation = Quaternion.Euler(0f, mf_snapToPointOffsetRotation, 0f) * m_gyroscopeRotation;
-				transform.rotation = m_unityWorldRotation;
+    void Update()
+    {
+        rotFix = new Quaternion(gyro.attitude.x, gyro.attitude.y, gyro.attitude.z, gyro.attitude.w);
 
-				// if: The current rotation pivot is not this object a.k.a Third Person Mode
-				if (m_RotationPivot != this.transform)
-				{
-					if (bIsPivotRotating)
-						m_RotationPivot.rotation = m_unityWorldRotation * m_initialPivotRotationOnAwake;
+        float RotationX = rotFix.x;
+        float RotationY = rotFix.y;
+        //float RotationZ = rotFix.z;
 
-					transform.position = (m_unityWorldRotation * m_inverseInitialRotationOnAwake * m_vectorFromPivot) + m_RotationPivot.position;
-				}
-			}
+        //float mouseX = Input.GetAxis("Mouse X") * _mouseSensitivity;
+        //float mouseY = Input.GetAxis("Mouse Y") * _mouseSensitivity;
 
-			// UpdateGyroscopeRotation(): Recalculates the gyroscope rotation and updates it into m_gyroscopeRotation;
-			private void UpdateGyroscopeRotation()
-			{
-				m_gyroscopeRotation = Quaternion.Euler(90f, 0f, 0f) * new Quaternion(m_Gyroscope.attitude.x, m_Gyroscope.attitude.y, -m_Gyroscope.attitude.z, -m_Gyroscope.attitude.w);
-			}
+        _rotationY += RotationX * _gyroSensitivity;
+        _rotationX += RotationY * _gyroSensitivity;
+        //_rotationZ += RotationZ;
 
-			// Public Functions
-			/// <summary>
-			/// Sets the current rotation of the gyroscope to be the initial roation of the object
-			/// </summary>
-			public void SnapToPoint()
-			{
-				switch (enum_snapTo)
-				{
-					case SnapTo.InitialRotation:
-						mf_snapToPointOffsetRotation = m_initialRotationOnAwake.eulerAngles.y - m_gyroscopeRotation.eulerAngles.y;
-						break;
-					case SnapTo.WorldAxis:
-						mf_snapToPointOffsetRotation = -m_gyroscopeRotation.eulerAngles.y;
-						break;
-				}
-			}
+        // Apply clamping for x rotation 
+        _rotationX = Mathf.Clamp(_rotationX, _rotationXMinMax.x, _rotationXMinMax.y);
 
-			// Getter-Setter Functions
-			/// <summary>
-			/// Returns the current rotation of gyrotation
-			/// </summary>
-			public Quaternion GyroscopeRotation { get { return m_gyroscopeRotation; } }
+        Vector3 nextRotation = new Vector3(_rotationX, _rotationY);
 
-			/// <summary>
-			/// Returns the rotation in relating to world axis
-			/// </summary>
-			public Quaternion WorldRotation { get { return m_unityWorldRotation; } }
-		}
+        // Apply damping between rotation changes
+        _currentRotation = Vector3.SmoothDamp(_currentRotation, nextRotation, ref _smoothVelocity, _smoothTime);
+        transform.localEulerAngles = _currentRotation;
 
-	}
+        // Substract forward vector of the GameObject to point its forward vector to the target
+        transform.position = _target.position - transform.forward * _distanceFromTarget;
+    }
 }
