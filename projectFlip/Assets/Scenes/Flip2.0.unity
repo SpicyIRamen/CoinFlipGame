@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -435,7 +435,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1177941140}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1177941142
 Camera:
   m_ObjectHideFlags: 0
@@ -460,8 +460,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  far clip plane: 4
+  field of view: 29
   orthographic: 1
   orthographic size: 1.3
   m_Depth: 0
@@ -470,7 +470,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 1
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -505,6 +505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b69bc12daafe84949b540e22f1b6a650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ForceCamera: {fileID: 1177941142}
   hitMaterial: {fileID: 2100000, guid: bc26ae34b1f09de4db1b5bc4efce3fb3, type: 2}
 --- !u!1001 &1625009938
 PrefabInstance:

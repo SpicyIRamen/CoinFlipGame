@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RaycastTest : MonoBehaviour
 {
+    public Camera ForceCamera;
     Vector3 touchPosWorld;
     TouchPhase touchPhase = TouchPhase.Ended;
 
@@ -19,7 +20,7 @@ public class RaycastTest : MonoBehaviour
 
         if (Input.touchCount == 1 && Input.GetTouch(0).phase == touchPhase)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            Ray ray = ForceCamera.ScreenPointToRay(Input.GetTouch(0).position);
             RaycastHit hit;
             Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 100f);
             if (Physics.Raycast(ray, out hit))
