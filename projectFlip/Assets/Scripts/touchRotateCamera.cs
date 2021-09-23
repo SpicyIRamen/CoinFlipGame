@@ -14,7 +14,6 @@ public class touchRotateCamera : MonoBehaviour
     public float orbitDegreesPerSec = 180.0f;
 
     public Transform target;
-    //public Vector3 targetOffset;
     public float distance = 5.0f;
     public float maxDistance = 20;
     public float minDistance = .6f;
@@ -22,9 +21,6 @@ public class touchRotateCamera : MonoBehaviour
     public float ySpeed = 5.0f;
     public int yMinLimit = -80;
     public int yMaxLimit = 80;
-    //public float zoomRate = 10.0f;
-    //public float panSpeed = 0.3f;
-    //public float zoomDampening = 5.0f;
 
     private float xDeg = 0.0f;
     private float yDeg = 0.0f;
@@ -40,13 +36,9 @@ public class touchRotateCamera : MonoBehaviour
     private Vector3 delta;
     private Vector3 lastOffset;
     private Vector3 lastOffsettemp;
-    //private Vector3 CameraPosition;
-    //private Vector3 Targetposition;
-    //private Vector3 MoveDistance;
 
-    public float moveSpeed = 0.125f;
-    
-
+    public float moveSpeed = 0.017f;
+    private bool enableTouch = true;
 
 
     void Start() { Init(); }
@@ -95,22 +87,11 @@ public class touchRotateCamera : MonoBehaviour
             xDeg += touchposition.x * xSpeed * 0.002f;
             yDeg -= touchposition.y * ySpeed * 0.002f;
             yDeg = ClampAngle(yDeg, yMinLimit, yMaxLimit);
-
         }
         if (spinAround == true)
         {
-
-            //transform.position = target.position + (transform.position - target.position).normalized * orbitDistance;
-
-            //transform.RotateAround(target.position, Vector3.up, orbitDegreesPerSec * Time.deltaTime);
-            //transform.position = Vector3.Lerp(this.transform.position, new Vector3(transform.position.x, 10 ,transform.position.z), 0.9f);
-            //transform.position = new Vector3(transform.position.x, 10, transform.position.z);
-            
-            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, 10, transform.position.z), Time.deltaTime * moveSpeed);
-            //transform.position = new Vector3(transform.position.x, 10, transform.position.z);
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 8, transform.position.z), Time.deltaTime * moveSpeed);
             transform.LookAt(target);
-            //transform.RotateAround(target.transform.position, Vector3.up, 20 * Time.deltaTime);
-            Debug.Log("Should be spinning");
         } 
         else { 
 
@@ -150,6 +131,7 @@ public class touchRotateCamera : MonoBehaviour
 
     public void RaycastScript()
     {
+        if(enableTouch == true) { 
         if (Input.touchCount == 1 && Input.GetTouch(0).phase == touchPhase)
         {
             Ray ray2 = MainCamera.ScreenPointToRay(Input.GetTouch(0).position);
@@ -165,6 +147,7 @@ public class touchRotateCamera : MonoBehaviour
 
                     Debug.Log("Touched " + touchedObject.transform.name);
                     Debug.Log(hit.point);
+
                 }
 
                 var rig = hit.collider.GetComponent<Rigidbody>();
@@ -174,6 +157,7 @@ public class touchRotateCamera : MonoBehaviour
                     var randomNumber = Random.Range(10f, 20f);
                     rig.GetComponent<MeshRenderer>().material = hitMaterial;
                     rig.AddForceAtPosition(Vector3.up * randomNumber, hit.point, ForceMode.VelocityChange);
+                    enableTouch = false;
                     rig.useGravity = true;
                     Debug.Log("Force is: " + randomNumber);
 
@@ -182,6 +166,7 @@ public class touchRotateCamera : MonoBehaviour
                 }
             }
         }
+        }
     }
     public void booleanCheck()
     {
@@ -189,7 +174,7 @@ public class touchRotateCamera : MonoBehaviour
         {
             //StartCoroutine(ExecuteAfterTime());
             transform.RotateAround(target.transform.position, Vector3.up, 20 * Time.deltaTime);
-            Debug.Log("Should be spinning");
+            //Debug.Log("Should be spinning");
         }
     }
 
