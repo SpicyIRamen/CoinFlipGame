@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -468,6 +468,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 877922985}
   hitMaterial: {fileID: 2100000, guid: bc26ae34b1f09de4db1b5bc4efce3fb3, type: 2}
+  orbitDistance: 10
+  orbitDegreesPerSec: 180
   target: {fileID: 1625009939}
   distance: 5
   maxDistance: 20
@@ -476,6 +478,7 @@ MonoBehaviour:
   ySpeed: 100
   yMinLimit: -80
   yMaxLimit: 80
+  moveSpeed: 10
 --- !u!1 &973923050
 GameObject:
   m_ObjectHideFlags: 3

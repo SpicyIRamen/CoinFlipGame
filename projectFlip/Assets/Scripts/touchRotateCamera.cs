@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class touchRotateCamera : MonoBehaviour
 {
+
     public Camera MainCamera;
     TouchPhase touchPhase = TouchPhase.Ended;
     public Material hitMaterial;
@@ -43,9 +44,14 @@ public class touchRotateCamera : MonoBehaviour
     //private Vector3 Targetposition;
     //private Vector3 MoveDistance;
 
+    public float moveSpeed = 0.125f;
+    
+
+
 
     void Start() { Init(); }
     void OnEnable() { Init(); }
+    
 
     public void Init()
     {
@@ -74,12 +80,13 @@ public class touchRotateCamera : MonoBehaviour
     private void Update()
     {
         RaycastScript();
+        
         booleanCheck();
     }
 
-    /*
-      * Camera logic on LateUpdate to only update after all character movement logic has been handled.
-      */
+    
+      //Camera logic on LateUpdate to only update after all character movement logic has been handled.
+      
     void LateUpdate()
     {
         if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
@@ -96,8 +103,11 @@ public class touchRotateCamera : MonoBehaviour
             //transform.position = target.position + (transform.position - target.position).normalized * orbitDistance;
 
             //transform.RotateAround(target.position, Vector3.up, orbitDegreesPerSec * Time.deltaTime);
-
-            transform.position = new Vector3(0, 5, 0);
+            //transform.position = Vector3.Lerp(this.transform.position, new Vector3(transform.position.x, 10 ,transform.position.z), 0.9f);
+            //transform.position = new Vector3(transform.position.x, 10, transform.position.z);
+            
+            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, 10, transform.position.z), Time.deltaTime * moveSpeed);
+            //transform.position = new Vector3(transform.position.x, 10, transform.position.z);
             transform.LookAt(target);
             //transform.RotateAround(target.transform.position, Vector3.up, 20 * Time.deltaTime);
             Debug.Log("Should be spinning");
@@ -129,6 +139,13 @@ public class touchRotateCamera : MonoBehaviour
             angle -= 360;
         return Mathf.Clamp(angle, min, max);
     }
+
+//     IEnumerator ExecuteAfterTime()
+//  {
+//      yield return new WaitForSecondsRealTime(5); ///
+ 
+//      // Code to execute after the delay
+//  }
 
 
     public void RaycastScript()
@@ -170,8 +187,10 @@ public class touchRotateCamera : MonoBehaviour
     {
         if (spinAround == true)
         {
+            //StartCoroutine(ExecuteAfterTime());
             transform.RotateAround(target.transform.position, Vector3.up, 20 * Time.deltaTime);
             Debug.Log("Should be spinning");
         }
     }
+
 }
