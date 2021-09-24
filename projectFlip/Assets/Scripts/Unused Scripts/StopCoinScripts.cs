@@ -38,14 +38,14 @@ public class StopCoinScripts : MonoBehaviour
         //   }
 
         // Update is called once per frame
-        void Update()
-        {
-            if (GetComponent<Rigidbody>().position.y >= 100.0)
-            {
-                GetComponent<Rigidbody>().velocity = Vector3.zero;
-                GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                Debug.Log("max height reached");
-            }
-        }
+        // void Update()
+        // {
+        //     if (GetComponent<Rigidbody>().position.y >= 100.0)
+        //     {
+        //         GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        //         Debug.Log("max height reached");
+        //     }
+        // }
     }
 }
