@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class touchRotateCamera : MonoBehaviour
 {
 
     public Camera MainCamera;
-    TouchPhase touchPhase = TouchPhase.Ended;
+    TouchPhase touchPhase = TouchPhase.Moved;
     public Material hitMaterial;
     bool spinAround = false;
-
     public float orbitDistance = 10.0f;
     public float orbitDegreesPerSec = 180.0f;
-
     public Transform target;
     public float distance = 5.0f;
     public float maxDistance = 20;
@@ -21,29 +20,32 @@ public class touchRotateCamera : MonoBehaviour
     public float ySpeed = 5.0f;
     public int yMinLimit = -80;
     public int yMaxLimit = 80;
-
     private float xDeg = 0.0f;
     private float yDeg = 0.0f;
     private float currentDistance;
-    private float desiredDistance;
     private Quaternion currentRotation;
     private Quaternion desiredRotation;
     private Quaternion rotation;
     private Vector3 position;
-
-    private Vector3 FirstPosition;
-    private Vector3 SecondPosition;
-    private Vector3 delta;
-    private Vector3 lastOffset;
-    private Vector3 lastOffsettemp;
-
     public float moveSpeed = 0.017f;
     private bool enableTouch = true;
+    private bool disableCamera = false;
+    public Button confirmCamera;
 
+    GameObject cameraPhase;
+    GameObject flipPhase;
 
-    void Start() { Init(); }
+    void Start()
+    {
+        cameraPhase = GameObject.Find("cameraPhase");
+        flipPhase = GameObject.Find("flipPhase");
+        flipPhase.SetActive(false);
+        Init();
+
+    }
+
     void OnEnable() { Init(); }
-    
+
 
     public void Init()
     {
@@ -57,7 +59,6 @@ public class touchRotateCamera : MonoBehaviour
 
         distance = Vector3.Distance(transform.position, target.position);
         currentDistance = distance;
-        desiredDistance = distance;
 
         //be sure to grab the current rotations as starting points.
         position = transform.position;
@@ -69,47 +70,60 @@ public class touchRotateCamera : MonoBehaviour
         yDeg = Vector3.Angle(Vector3.up, transform.up);
     }
 
+
+
     private void Update()
     {
-        RaycastScript();
-        
-        booleanCheck();
+        if (disableCamera == true)
+        {
+
+            RaycastScript();
+        }
+
+        cameraSpinAfterFlip();
     }
 
-    
-      //Camera logic on LateUpdate to only update after all character movement logic has been handled.
-      
+    //Camera logic on LateUpdate to only update after all character movement logic has been handled.
+
     void LateUpdate()
     {
-        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
+        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved && disableCamera == false)
         {
             Vector2 touchposition = Input.GetTouch(0).deltaPosition;
             xDeg += touchposition.x * xSpeed * 0.002f;
             yDeg -= touchposition.y * ySpeed * 0.002f;
             yDeg = ClampAngle(yDeg, yMinLimit, yMaxLimit);
+
+            Button btn = confirmCamera.GetComponent<Button>();
+            btn.onClick.AddListener(ButtonClicked);
+
+
+
+
+
+
+
+
+
         }
         if (spinAround == true)
         {
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 8, transform.position.z), Time.deltaTime * moveSpeed);
             transform.LookAt(target);
-        } 
-        else { 
+        }
+        else
+        {
 
-        desiredRotation = Quaternion.Euler(yDeg, xDeg, 0);
-        currentRotation = transform.rotation;
-        rotation = Quaternion.Lerp(currentRotation, desiredRotation, Time.deltaTime);
-        transform.rotation = rotation;
+            desiredRotation = Quaternion.Euler(yDeg, xDeg, 0);
+            currentRotation = transform.rotation;
+            rotation = Quaternion.Lerp(currentRotation, desiredRotation, Time.deltaTime);
+            transform.rotation = rotation;
 
-        ////////Orbit Position
-
-        // affect the desired Zoom distance if we roll the scrollwheel
-        //desiredDistance = Mathf.Clamp(desiredDistance, minDistance, maxDistance);
-        //currentDistance = Mathf.Lerp(currentDistance, desiredDistance, Time.deltaTime);
+            position = target.position - (rotation * Vector3.forward * currentDistance);
+            transform.position = position;
 
 
-        position = target.position - (rotation * Vector3.forward * currentDistance);
 
-        transform.position = position;
         }
     }
     private static float ClampAngle(float angle, float min, float max)
@@ -121,61 +135,71 @@ public class touchRotateCamera : MonoBehaviour
         return Mathf.Clamp(angle, min, max);
     }
 
-//     IEnumerator ExecuteAfterTime()
-//  {
-//      yield return new WaitForSecondsRealTime(5); ///
- 
-//      // Code to execute after the delay
-//  }
 
 
     public void RaycastScript()
     {
-        if(enableTouch == true) { 
-        if (Input.touchCount == 1 && Input.GetTouch(0).phase == touchPhase)
+        if (enableTouch == true)
         {
-            Ray ray2 = MainCamera.ScreenPointToRay(Input.GetTouch(0).position);
-            RaycastHit hit;
-            Debug.DrawRay(ray2.origin, ray2.direction * 100, Color.red, 100f);
-            if (Physics.Raycast(ray2, out hit))
+            if (Input.touchCount == 1 && Input.GetTouch(0).phase == touchPhase)
             {
-                Debug.Log(hit.transform.name);
-                if (hit.collider != null)
+                Ray ray2 = MainCamera.ScreenPointToRay(Input.GetTouch(0).position);
+                RaycastHit hit;
+                Debug.DrawRay(ray2.origin, ray2.direction * 100, Color.red, 100f);
+                if (Physics.Raycast(ray2, out hit))
                 {
+                    Debug.Log(hit.transform.name);
+                    if (hit.collider != null)
+                    {
 
-                    GameObject touchedObject = hit.transform.gameObject;
+                        GameObject touchedObject = hit.transform.gameObject;
 
-                    Debug.Log("Touched " + touchedObject.transform.name);
-                    Debug.Log(hit.point);
+                        Debug.Log("Touched " + touchedObject.transform.name);
+                        Debug.Log(hit.point);
 
-                }
+                    }
 
-                var rig = hit.collider.GetComponent<Rigidbody>();
-                
-                if (rig != null)
-                {
-                    var randomNumber = Random.Range(10f, 20f);
-                    rig.GetComponent<MeshRenderer>().material = hitMaterial;
-                    rig.AddForceAtPosition(Vector3.up * randomNumber, hit.point, ForceMode.VelocityChange);
-                    enableTouch = false;
-                    rig.useGravity = true;
-                    Debug.Log("Force is: " + randomNumber);
+                    var rig = hit.collider.GetComponent<Rigidbody>();
 
-                    spinAround = true;
+                    if (rig != null)
+                    {
+                        flipPhase.SetActive(false);
+                        var randomNumber = Random.Range(10f, 20f);
+                        rig.GetComponent<MeshRenderer>().material = hitMaterial;
+                        rig.AddForceAtPosition(Vector3.up * randomNumber, hit.point, ForceMode.VelocityChange);
+                        enableTouch = false;
+                        rig.useGravity = true;
+                        Debug.Log("Force is: " + randomNumber);
 
+                        spinAround = true;
+
+                    }
                 }
             }
         }
-        }
     }
-    public void booleanCheck()
+    public void cameraSpinAfterFlip()
     {
         if (spinAround == true)
         {
-            //StartCoroutine(ExecuteAfterTime());
+
             transform.RotateAround(target.transform.position, Vector3.up, 20 * Time.deltaTime);
-            //Debug.Log("Should be spinning");
+
         }
     }
 
+
+    void ButtonClicked()
+    {
+        disableCamera = true;
+        cameraPhase.SetActive(false);
+        flipPhase.SetActive(true);
+
+
+    }
+
+
+
 }
+
+

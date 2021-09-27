@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class CoinSide : MonoBehaviour
 {
-    
-   bool isHeads = true;
-   float timeLeft = 10;
-   bool timer = false;
+  private bool isHeads = true;
+  private float timeLeft = 10;
+  private bool timer = false;
 
    public GameObject obj;
    private float x;
 
-   private void headCheck()
+    //Check if coin is Heads or Tails
+   private void coinSideCheck()
    {    
        x = obj.transform.eulerAngles.x;
        Debug.Log("x: " + x);
@@ -36,25 +36,7 @@ public class CoinSide : MonoBehaviour
        }
    }
 
-   // private void timeCheck()
-   // {
-   //     while (timer == true)
-   //     {
-   //           if ( timeLeft > 0 )
-   //             {
-   //                 timeLeft -= Time.deltaTime;
-   //                 Debug.Log(timeLeft + "IF");
-   //             }else
-   //             {
-   //                 Debug.Log("Time has run out");
-   //                 timeLeft = 0;
-   //                 headCheck();
-   //                 Debug.Log(timeLeft + "Else");
-   //                 timer = false;
-   //             }
-   //     }
-               
-   // }
+   
 
    //Detect collisions between the GameObjects with Colliders attached
    private void OnCollisionEnter(Collision collision)
@@ -66,21 +48,11 @@ public class CoinSide : MonoBehaviour
                //If the GameObject's name matches the one you suggest, output this message in the console
                Debug.Log("Collision with floor");
                timer = true;
-               //timeCheck();
-               // timeLeft -= Time.deltaTime;
-               // Debug.Log(timeLeft);
-               // if ( timeLeft <= 1.0f )
-               // {
-               //     Debug.Log("Time has run out");
-               //     headCheck();
-               // }
+               
            }
    }
 
-   void Start() 
-   {
-    
-   }
+ 
 
 
    // Update is called once per frame
@@ -97,7 +69,7 @@ public class CoinSide : MonoBehaviour
                Debug.Log("Time has run out!");
                timeLeft = 0;
                timer = false;
-               headCheck();
+               coinSideCheck();
            }
        }
 
