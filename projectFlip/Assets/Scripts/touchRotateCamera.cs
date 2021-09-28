@@ -5,10 +5,8 @@ using UnityEngine.UI;
 
 public class touchRotateCamera : MonoBehaviour
 {
-
     public Camera MainCamera;
-    TouchPhase touchPhase = TouchPhase.Moved;
-    public Material hitMaterial;
+    TouchPhase touchPhase = TouchPhase.Moved;    
     bool spinAround = false;
     public float orbitDistance = 10.0f;
     public float orbitDegreesPerSec = 180.0f;
@@ -31,6 +29,7 @@ public class touchRotateCamera : MonoBehaviour
     private bool enableTouch = true;
     private bool disableCamera = false;
     public Button confirmCamera;
+    public int CoinFlipSound;
 
     GameObject cameraPhase;
     GameObject flipPhase;
@@ -41,11 +40,9 @@ public class touchRotateCamera : MonoBehaviour
         flipPhase = GameObject.Find("flipPhase");
         flipPhase.SetActive(false);
         Init();
-
     }
 
     void OnEnable() { Init(); }
-
 
     public void Init()
     {
@@ -69,17 +66,12 @@ public class touchRotateCamera : MonoBehaviour
         xDeg = Vector3.Angle(Vector3.right, transform.right);
         yDeg = Vector3.Angle(Vector3.up, transform.up);
     }
-
-
-
     private void Update()
     {
         if (disableCamera == true)
         {
-
             RaycastScript();
         }
-
         cameraSpinAfterFlip();
     }
 
@@ -96,15 +88,6 @@ public class touchRotateCamera : MonoBehaviour
 
             Button btn = confirmCamera.GetComponent<Button>();
             btn.onClick.AddListener(ButtonClicked);
-
-
-
-
-
-
-
-
-
         }
         if (spinAround == true)
         {
@@ -121,9 +104,6 @@ public class touchRotateCamera : MonoBehaviour
 
             position = target.position - (rotation * Vector3.forward * currentDistance);
             transform.position = position;
-
-
-
         }
     }
     private static float ClampAngle(float angle, float min, float max)
@@ -152,8 +132,7 @@ public class touchRotateCamera : MonoBehaviour
                     if (hit.collider != null)
                     {
 
-                        GameObject touchedObject = hit.transform.gameObject;
-
+                        GameObject touchedObject = hit.transform.gameObject;                        
                         Debug.Log("Touched " + touchedObject.transform.name);
                         Debug.Log(hit.point);
 
@@ -164,9 +143,10 @@ public class touchRotateCamera : MonoBehaviour
                     if (rig != null)
                     {
                         flipPhase.SetActive(false);
-                        var randomNumber = Random.Range(10f, 20f);
-                        rig.GetComponent<MeshRenderer>().material = hitMaterial;
+                        var randomNumber = Random.Range(10f, 20f);                        
                         rig.AddForceAtPosition(Vector3.up * randomNumber, hit.point, ForceMode.VelocityChange);
+                        AudioManager.instance.PlaySfx(CoinFlipSound);
+                        Debug.Log("Coin flip sound plays");
                         enableTouch = false;
                         rig.useGravity = true;
                         Debug.Log("Force is: " + randomNumber);
@@ -182,20 +162,15 @@ public class touchRotateCamera : MonoBehaviour
     {
         if (spinAround == true)
         {
-
             transform.RotateAround(target.transform.position, Vector3.up, 20 * Time.deltaTime);
-
         }
     }
-
 
     void ButtonClicked()
     {
         disableCamera = true;
         cameraPhase.SetActive(false);
         flipPhase.SetActive(true);
-
-
     }
 
 

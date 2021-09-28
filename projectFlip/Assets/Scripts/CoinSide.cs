@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class CoinSide : MonoBehaviour
 {
-  private bool isHeads = true;
-  private float timeLeft = 10;
-  private bool timer = false;
+    private bool isHeads = true;
+    private float timeLeft = 10;
+    private bool timer = false;
 
-   public GameObject obj;
-   private float x;
+    public int CoinDropSound;
+    public int ResultSound;
+    public GameObject obj;
+    private float x;
+
+    public ScoreController scoreController;
 
     //Check if coin is Heads or Tails
    private void coinSideCheck()
@@ -22,33 +26,31 @@ public class CoinSide : MonoBehaviour
        {
             isHeads = false;
             Debug.Log("Its tails");
-             
+            this.scoreController.GoalPlayer1();
 
        }else if (x > 260 && x < 280)
        {
             isHeads = true;
             Debug.Log("Its heads");
-            
+            this.scoreController.GoalPlayer2();
 
        }else
        {
            Debug.Log("No value");
        }
-   }
-
-   
+   } 
 
    //Detect collisions between the GameObjects with Colliders attached
    private void OnCollisionEnter(Collision collision)
-   {
-        
+   {        
        //Check for a match with the specified name on any GameObject that collides with your GameObject
        if (collision.gameObject.tag == "Objects")
            {
-               //If the GameObject's name matches the one you suggest, output this message in the console
-               Debug.Log("Collision with floor");
-               timer = true;
-               
+            AudioManager.instance.PlaySfx(CoinDropSound);
+            Debug.Log("Coin drop sound plays");
+            //If the GameObject's name matches the one you suggest, output this message in the console
+            Debug.Log("Collision with floor");
+            timer = true;               
            }
    }
 
@@ -70,7 +72,9 @@ public class CoinSide : MonoBehaviour
                timeLeft = 0;
                timer = false;
                coinSideCheck();
-           }
+               AudioManager.instance.PlaySfx(ResultSound);
+                Debug.Log("Flawless Victory sound plays");
+            }
        }
 
    }
