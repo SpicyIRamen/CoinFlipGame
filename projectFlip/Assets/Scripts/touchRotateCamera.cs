@@ -6,33 +6,31 @@ using UnityEngine.UI;
 public class touchRotateCamera : MonoBehaviour
 {
     public Camera MainCamera;
-    TouchPhase touchPhase = TouchPhase.Moved;    
+    TouchPhase touchPhase = TouchPhase.Moved;
     bool spinAround = false;
-    public float orbitDistance = 10.0f;
-    public float orbitDegreesPerSec = 180.0f;
     public Transform target;
-    public float distance = 5.0f;
-    public float maxDistance = 20;
-    public float minDistance = .6f;
-    public float xSpeed = 5.0f;
-    public float ySpeed = 5.0f;
-    public int yMinLimit = -80;
-    public int yMaxLimit = 80;
-    private float xDeg = 0.0f;
-    private float yDeg = 0.0f;
-    private float currentDistance;
+    public float orbitDistance = 10.0f, orbitDegreesPerSec = 180.0f, distance = 5.0f, maxDistance = 20, minDistance = .6f, currentDistance;
+    public float xSpeed = 5.0f, ySpeed = 5.0f, moveSpeed = 0.017f, xDeg = 0.0f, yDeg = 0.0f;
+    public int yMinLimit = -80, yMaxLimit = 80;
     private Quaternion currentRotation;
     private Quaternion desiredRotation;
     private Quaternion rotation;
     private Vector3 position;
-    public float moveSpeed = 0.017f;
     private bool enableTouch = true;
     private bool disableCamera = false;
     public Button confirmCamera;
     public int CoinFlipSound;
+    
+    public static touchRotateCamera instance;
+
+    //public float waitToHit = 5f;
 
     GameObject cameraPhase;
     GameObject flipPhase;
+
+    private void Awake(){
+        instance = this;
+    }
 
     void Start()
     {
@@ -81,6 +79,7 @@ public class touchRotateCamera : MonoBehaviour
     {
         if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved && disableCamera == false)
         {
+
             Vector2 touchposition = Input.GetTouch(0).deltaPosition;
             xDeg += touchposition.x * xSpeed * 0.002f;
             yDeg -= touchposition.y * ySpeed * 0.002f;
@@ -88,6 +87,11 @@ public class touchRotateCamera : MonoBehaviour
 
             Button btn = confirmCamera.GetComponent<Button>();
             btn.onClick.AddListener(ButtonClicked);
+
+        }
+        else
+        {
+            TimerForCoin.instance.timeScript();
         }
         if (spinAround == true)
         {
@@ -126,13 +130,16 @@ public class touchRotateCamera : MonoBehaviour
                 Ray ray2 = MainCamera.ScreenPointToRay(Input.GetTouch(0).position);
                 RaycastHit hit;
                 Debug.DrawRay(ray2.origin, ray2.direction * 100, Color.red, 100f);
+
                 if (Physics.Raycast(ray2, out hit))
                 {
+                    //var Timer = waitToHit += Time.deltaTime;
                     Debug.Log(hit.transform.name);
+
                     if (hit.collider != null)
                     {
 
-                        GameObject touchedObject = hit.transform.gameObject;                        
+                        GameObject touchedObject = hit.transform.gameObject;
                         Debug.Log("Touched " + touchedObject.transform.name);
                         Debug.Log(hit.point);
 
@@ -143,16 +150,14 @@ public class touchRotateCamera : MonoBehaviour
                     if (rig != null)
                     {
                         flipPhase.SetActive(false);
-                        var randomNumber = Random.Range(10f, 20f);                        
+                        var randomNumber = Random.Range(10f, 20f);
                         rig.AddForceAtPosition(Vector3.up * randomNumber, hit.point, ForceMode.VelocityChange);
                         AudioManager.instance.PlaySfx(CoinFlipSound);
                         Debug.Log("Coin flip sound plays");
                         enableTouch = false;
                         rig.useGravity = true;
                         Debug.Log("Force is: " + randomNumber);
-
                         spinAround = true;
-
                     }
                 }
             }
@@ -166,12 +171,29 @@ public class touchRotateCamera : MonoBehaviour
         }
     }
 
-    void ButtonClicked()
+    public void ButtonClicked()
     {
+        // TimerForCoin.instance.timeScript();
         disableCamera = true;
         cameraPhase.SetActive(false);
         flipPhase.SetActive(true);
     }
+
+    // public void addForce()
+    // {
+    //     flipPhase.SetActive(false);
+    //     var randomNumber = Random.Range(10f, 20f);
+    //     rig.AddForceAtPosition(Vector3.up * randomNumber, hit.point, ForceMode.VelocityChange);
+    //     AudioManager.instance.PlaySfx(CoinFlipSound);
+    //     Debug.Log("Coin flip sound plays");
+    //     enableTouch = false;
+    //     rig.useGravity = true;
+    //     Debug.Log("Force is: " + randomNumber);
+
+    //     spinAround = true;
+
+
+    // }
 
 
 
