@@ -68,10 +68,14 @@ public class touchRotateCamera : MonoBehaviour
         yDeg = Vector3.Angle(Vector3.up, transform.up);
     }
     private void Update()
-    {
-        if (TimerForCoin.instance.timeForCameraPhaseRanOut)
+    {     
+
+        if (TimerForCoin.instance.timeForFlipPhaseRanOut)
         {
+            Debug.Log("Coin is launched into the air");
             CoinSide.instance.afkSpin();
+            enableTouch = false;
+            TimerForCoin.instance.timeForFlipPhaseRanOut = false;
         }
         if (disableCamera == true)
         {
