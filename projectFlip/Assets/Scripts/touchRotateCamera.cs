@@ -25,8 +25,11 @@ public class touchRotateCamera : MonoBehaviour
 
     //public float waitToHit = 5f;
 
+    [HideInInspector]
     public GameObject cameraPhase;
+    [HideInInspector]
     public GameObject flipPhase;
+
 
     private void Awake(){
         instance = this;
@@ -66,6 +69,10 @@ public class touchRotateCamera : MonoBehaviour
     }
     private void Update()
     {
+        if (TimerForCoin.instance.timeForCameraPhaseRanOut)
+        {
+            CoinSide.instance.afkSpin();
+        }
         if (disableCamera == true)
         {
             RaycastScript();
@@ -79,7 +86,6 @@ public class touchRotateCamera : MonoBehaviour
     {
         if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved && disableCamera == false)
         {
-
             Vector2 touchposition = Input.GetTouch(0).deltaPosition;
             xDeg += touchposition.x * xSpeed * 0.002f;
             yDeg -= touchposition.y * ySpeed * 0.002f;
@@ -87,7 +93,6 @@ public class touchRotateCamera : MonoBehaviour
 
             Button btn = confirmCamera.GetComponent<Button>();
             btn.onClick.AddListener(ButtonClicked);
-
         }
         else
         {
@@ -100,7 +105,6 @@ public class touchRotateCamera : MonoBehaviour
         }
         else
         {
-
             desiredRotation = Quaternion.Euler(yDeg, xDeg, 0);
             currentRotation = transform.rotation;
             rotation = Quaternion.Lerp(currentRotation, desiredRotation, Time.deltaTime);
@@ -151,7 +155,8 @@ public class touchRotateCamera : MonoBehaviour
                     {
                         flipPhase.SetActive(false);
                         var randomNumber = Random.Range(10f, 20f);
-                        rig.AddForceAtPosition(Vector3.up * randomNumber, hit.point, ForceMode.VelocityChange);
+                        //rig.AddForceAtPosition(Vector3.up * randomNumber, hit.point, ForceMode.VelocityChange);
+                        rig.AddForceAtPosition(Vector3.up * randomNumber, new Vector3(1, 9, 0), ForceMode.VelocityChange);
                         AudioManager.instance.PlaySfx(CoinFlipSound);
                         Debug.Log("Coin flip sound plays");
                         enableTouch = false;
@@ -163,6 +168,7 @@ public class touchRotateCamera : MonoBehaviour
             }
         }
     }
+
     public void cameraSpinAfterFlip()
     {
         if (spinAround == true)
