@@ -30,6 +30,10 @@ public class TimerForCoin : MonoBehaviour
         timerIsRunning = false;
         timeRemaining = 0;
         Debug.Log("User pressed button");
+        touchRotateCamera.instance.disableCamera = true;
+        Debug.Log("Camera disabled from timeforcoinscript");
+        touchRotateCamera.instance.cameraPhase.SetActive(false);
+        touchRotateCamera.instance.flipPhase.SetActive(true);
     }
 
     // Den vill inte gå vidare till swipe phase.
@@ -45,9 +49,9 @@ public class TimerForCoin : MonoBehaviour
                 timeRemaining -= Time.deltaTime;
         
             }
-            else
+            if (timeRemaining <= 0)
             {
-               ButtonClicked();
+                ButtonClicked();
             }
         }
 

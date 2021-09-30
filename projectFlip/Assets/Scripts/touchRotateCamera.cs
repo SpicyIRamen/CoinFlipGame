@@ -17,7 +17,7 @@ public class touchRotateCamera : MonoBehaviour
     private Quaternion rotation;
     private Vector3 position;
     private bool enableTouch = true;
-    private bool disableCamera = false;
+    public bool disableCamera = false;
     public Button confirmCamera;
     public int CoinFlipSound;
     
@@ -25,8 +25,8 @@ public class touchRotateCamera : MonoBehaviour
 
     //public float waitToHit = 5f;
 
-    GameObject cameraPhase;
-    GameObject flipPhase;
+    public GameObject cameraPhase;
+    public GameObject flipPhase;
 
     private void Awake(){
         instance = this;
@@ -175,6 +175,7 @@ public class touchRotateCamera : MonoBehaviour
     {
         // TimerForCoin.instance.timeScript();
         disableCamera = true;
+        Debug.Log("Camera disabled");
         cameraPhase.SetActive(false);
         flipPhase.SetActive(true);
     }
