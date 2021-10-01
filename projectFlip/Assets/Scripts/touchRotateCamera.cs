@@ -150,6 +150,7 @@ public class touchRotateCamera : MonoBehaviour
                         GameObject touchedObject = hit.transform.gameObject;
                         Debug.Log("Touched " + touchedObject.transform.name);
                         Debug.Log(hit.point);
+                        TimerForCoin.instance.userFlipCoin();
 
                     }
 

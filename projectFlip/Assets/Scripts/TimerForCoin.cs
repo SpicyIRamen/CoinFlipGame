@@ -111,4 +111,9 @@ public class TimerForCoin : MonoBehaviour
         timeRemaining = 5f;
         timeForCameraPhaseRanOut = true;
     }
+
+    public void userFlipCoin()
+    {
+        secondTimerIsRunning = false;
+    }
 }
