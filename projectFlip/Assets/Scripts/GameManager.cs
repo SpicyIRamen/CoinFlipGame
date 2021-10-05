@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    //public string mainMenu;
+
     public static GameManager Instance;
 
     public GameState State;
@@ -52,6 +55,15 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+
+    //public IEnumerator MainMenuScene() {
+
+    //    SceneManager.LoadScene(mainMenu);
+    
+    //}
+        
+
 }
 
 public enum GameState{
