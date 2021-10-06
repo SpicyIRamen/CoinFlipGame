@@ -1,0 +1,44 @@
+{
+    "name": "InputMaster",
+    "maps": [
+        {
+            "name": "Button",
+            "id": "dfb2b07a-91e7-4c50-8dee-b7e91859b6c6",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "61f662a2-0b84-4f7a-9f0b-bc28c8cbd71d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5580ab5d-997a-4495-8eec-932513492aed",
+                    "path": "<Keyboard>/k",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00bac7ff-2f05-473f-81de-f634c5ddee2a",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
