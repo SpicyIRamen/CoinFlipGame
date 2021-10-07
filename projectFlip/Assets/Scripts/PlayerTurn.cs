@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerTurn : MonoBehaviour
 {
+    public CoinSideRandomizer coinSideRandomizer;
+    string pickSide;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,4 +17,11 @@ public class PlayerTurn : MonoBehaviour
     {
         
     }
+
+    public void playerChosenSide()
+    {
+        pickSide = this.coinSideRandomizer.randSide();
+        Debug.Log("Player chosen side is" + pickSide);
+    }
+
 }

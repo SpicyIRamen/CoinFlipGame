@@ -4,7 +4,8 @@ using System.Collections;
 
 public class HeadButtonScript : MonoBehaviour
 {
-
+	public CoinSideRandomizer coinSideRandomizer;
+	public PlayerTurn playerTurn;
 	void Start()
 	{
 		//Button btn = headButton.GetComponent<Button>();
@@ -15,6 +16,9 @@ public class HeadButtonScript : MonoBehaviour
 	{
 		Debug.Log("You have clicked the button!");
 		GameObject chooseCoin = GameObject.Find("ChooseCoin");
+		//CoinSideRandomizer.instance.randSide();
+		this.coinSideRandomizer.randSide();
+		this.playerTurn.playerChosenSide();
 		chooseCoin.SetActive(false);
 	}
 
